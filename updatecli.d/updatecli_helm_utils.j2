@@ -19,13 +19,37 @@ sources:
       url: {{ url }}
       name: {{ chart_name }}
 
-  {{ environment }}:
-    name: Get {{ environment }} version
+  dev:
+    name: Get dev version
     kind: yaml
     scmid: default
     spec:
       file: charts/argocd/utils/{{ tool }}.yaml
-      key: $.spec.generators[0].list.elements[{{ row }}].targetRevision
+      key: $.spec.generators[0].list.elements[1].targetRevision
+
+  stg:
+    name: Get stg version
+    kind: yaml
+    scmid: default
+    spec:
+      file: charts/argocd/utils/{{ tool }}.yaml
+      key: $.spec.generators[0].list.elements[2].targetRevision
+
+  prd:
+    name: Get prd version
+    kind: yaml
+    scmid: default
+    spec:
+      file: charts/argocd/utils/{{ tool }}.yaml
+      key: $.spec.generators[0].list.elements[3].targetRevision
+
+  mgmt:
+    name: Get mgmt version
+    kind: yaml
+    scmid: default
+    spec:
+      file: charts/argocd/utils/{{ tool }}.yaml
+      key: $.spec.generators[0].list.elements[0].targetRevision
 
 conditions:
   {% if environment == "dev" %}
