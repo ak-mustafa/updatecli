@@ -5,13 +5,13 @@ scms:
   updatecli:
     kind: "github"
     spec:
-      user: "ak-mustafa"
-      email: "akmustafa.tech@gmail.com"
-      owner: "ak-mustafa"
-      repository: "updatecli"
+      user: '{{ .scm.user }}'
+      email: '{{ .scm.email }}'
+      owner: '{{ .scm.owner }}'
+      repository: '{{ .scm.repository }}'
       token: '{{ requiredEnv "GH_TOKEN" }}'
-      username: ak-mustafa
-      branch: "main"
+      username: '{{ .scm.username }}'
+      branch: '{{ .scm.branch }}'
 
 # Define the source of the data
 sources:
@@ -37,7 +37,6 @@ actions:
       description: "Prepend description"
       draft: false
       labels:
-        - "dependencies"
         - "update"
       title: "Pull Request Title"
 
