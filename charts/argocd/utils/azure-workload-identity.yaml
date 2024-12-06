@@ -1,0 +1,52 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  labels:
+    app.kubernetes.io/component: azure-workload-identity
+  name: azure-workload-identity
+  namespace: argocd
+spec:
+  generators:
+  - list:
+      elements:
+      - cluster: aks-neu-mgmt
+        url: mgmt
+        targetRevision: 1.2.2
+      - cluster: aks-neu-dev
+        url: dev
+        targetRevision: 1.4.0
+      - cluster: aks-neu-stg
+        url: stg
+        targetRevision: 1.2.2
+      - cluster: aks-neu-prd
+        url: prd
+        targetRevision: 1.2.2
+  syncPolicy:
+    preserveResourcesOnDeletion: false
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: azure-workload-identity
+        app.kubernetes.io/name: azure-workload-identity
+      name: 'azure-workload-identity-{{cluster}}'
+      namespace: argocd
+    spec:
+      project: '{{cluster}}'
+      sources:
+        - repoURL: ssh://git@github.com/cedesag/platform-infra
+          targetRevision: main
+          ref: values
+        - repoURL: https://azure.github.io/azure-workload-identity/charts
+          chart: workload-identity-webhook
+          targetRevision: '{{targetRevision}}'
+          helm:
+            releaseName: azure-workload-identity
+            valueFiles:
+            - '$values/charts/values/utils/azure-workload-identity/values.yaml'
+      destination:
+        namespace: "utils"
+        server: '{{url}}'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true

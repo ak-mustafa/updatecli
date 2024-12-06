@@ -1,0 +1,52 @@
+#updatecli.yaml
+
+name: Bump Helm Chart versions
+scms:
+  updatecli:
+    kind: "github"
+    spec:
+      user: "ak-mustafa"
+      email: "akmustafa.tech@gmail.com"
+      owner: "ak-mustafa"
+      repository: "updatecli"
+      token: '{{ requiredEnv "GH_TOKEN" }}'
+      username: ak-mustafa
+      branch: "main"
+
+# Define the source of the data
+sources:
+  latestVersion:
+    kind: helmchart
+    spec: 
+      url: https://azure.github.io/azure-workload-identity/charts
+      name: workload-identity-webhook
+  
+  DevChartVersion:
+    kind: yaml
+    spec:
+      file: "charts/argocd/utils/azure-workload-identity.yaml"
+      key: "spec.generators[0].list.elements[1].targetRevision"
+
+
+actions:
+  helm-charts:
+    kind: github/pullrequest
+    scmid: "updatecli"
+    spec:
+      automerge: false
+      description: "Prepend description"
+      draft: false
+      labels:
+        - "dependencies"
+        - "update"
+      title: "Pull Request Title"
+
+targets: 
+  DevChartVersion: 
+    name: test
+    scmid: updatecli
+    sourceid: latestVersion
+    kind: yaml
+    spec:
+      file: "charts/argocd/utils/azure-workload-identity.yaml"
+      key: "spec.generators[0].list.elements[1].targetRevision"
