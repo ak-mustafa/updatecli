@@ -1,4 +1,4 @@
-{% set environment = environments %}
+{% set environments_var = environments %}
 name: Update {{ tool }}-{{ env }} service Helm Chart versions
 
 scms:
@@ -36,7 +36,7 @@ sources:
   {% endfor %}
 
 conditions:
-  {% for environment in environments %}{{ environment }}:
+  {% for environment in environments_var %}{{ environment }}:
   {% if environment == "dev" %}
     name: Compare {{ environment }}
     kind: shell
