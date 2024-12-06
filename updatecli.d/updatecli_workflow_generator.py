@@ -13,7 +13,7 @@ TOOLS = {
 
 for env in ENVIRONMENTS:
     for tool in TOOLS:
-        input_file = f'../argocd/utils/{tool}.yaml'
+        input_file = f'../charts/argocd/utils/{tool}.yaml'
         output_file = f'/tmp/workflows/{tool}-{env}-helm.yaml'
       
         if os.path.exists(input_file):
