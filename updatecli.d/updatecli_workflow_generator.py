@@ -33,7 +33,7 @@ for env in ENVIRONMENTS:
                 template_str = template_file.read()
 
             template = Template(template_str)
-            rendered_output = template.render(elements=elements, tool=tool, environment=env, url=TOOLS[tool]['url'], chart_name=TOOLS[tool]['name'])
+            rendered_output = template.render(elements=elements, tool=tool, env=env, environment=ENVIRONMENTS, url=TOOLS[tool]['url'], chart_name=TOOLS[tool]['name'])
 
             with open(output_file, 'w') as output_file:
                 output_file.write(rendered_output)            
