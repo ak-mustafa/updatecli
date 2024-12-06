@@ -52,7 +52,7 @@ sources:
       key: $.spec.generators[0].list.elements[0].targetRevision
 
 conditions:
-  {% if {{ environment }} == 'dev' %}
+  {% if environment == 'dev' %}
     name: Compare {{ environment }}
     kind: shell
     sourceid: {{ environment }}
