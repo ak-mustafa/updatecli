@@ -17,9 +17,8 @@ sources:
     kind: helmchart
     spec:
       url: {{ url }}
-        kind: latest
-        name: {{ chart_name }}
-        
+      name: {{ chart_name }}
+
   {{ environment }}:
     name: Get {{ environment }} version
     kind: yaml
