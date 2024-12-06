@@ -2,7 +2,6 @@
 name: Updatecli
 
 on:
-  on:
   pull_request:
     # Sequence of patterns matched against refs/heads
     branches:
