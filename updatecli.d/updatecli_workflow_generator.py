@@ -27,7 +27,7 @@ for env in ENVIRONMENTS:
                     row = 3
                 elif env == 'mgmt':
                     row = 0
-                elements = yaml_data['spec']['generators'][0]['list']['elements'][row]['list']['elements']
+                elements = yaml_data['spec']['generators'][0]['list']['elements'][row]
 
             with open('updatecli_helm_utils.j2', 'r') as template_file:
                 template_str = template_file.read()
