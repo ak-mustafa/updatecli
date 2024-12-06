@@ -1,11 +1,6 @@
 name: Update {{ tool }}-{{ environment }} service Helm Chart versions
 
 scms:
-  {{ tool }}:
-    kind: helmchart
-    spec:
-      url:  {{ url }}
-      name: {{ chart_name }} 
   default:
     kind: github
     spec:
