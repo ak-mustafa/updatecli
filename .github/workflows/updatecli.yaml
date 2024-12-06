@@ -2,9 +2,8 @@
 name: Updatecli
 
 on:
-  schedule:
-    - cron: 0 * * * *
-
+    schedule:
+      - cron: "* * * * *"
 permissions:
   contents: write
   pull-requests: write
