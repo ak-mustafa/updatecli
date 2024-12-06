@@ -2,7 +2,7 @@
 name: Updatecli
 
 on:
-    schedule:
+  schedule:
       - cron: "* * * * *"
 permissions:
   contents: write

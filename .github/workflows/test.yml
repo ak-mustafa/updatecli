@@ -2,6 +2,9 @@
 name: test
 
 on:
+  push:
+    branches:
+      - main
   pull_request:
     # Sequence of patterns matched against refs/heads
     branches:
@@ -25,6 +28,7 @@ jobs:
           mkdir /tmp/workflows
           python updatecli.d/updatecli_workflow_generator.py
           ls -l /tmp
+          ls -l /tmp/workflows
 
       - name: Install Updatecli in the runner
         uses: updatecli/updatecli-action@v2
