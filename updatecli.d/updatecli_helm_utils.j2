@@ -28,28 +28,28 @@ sources:
       key: $.spec.generators[0].list.elements[{{ row }}].targetRevision
 
 conditions:
-  {% if {{ environment }} == "dev" %}
+  {% if environment == "dev" %}
     name: Compare {{ environment }}
     kind: shell
     sourceid: {{ environment }}
     spec:
       command: bash ./compare_version.sh {% raw %}{{ source "{% endraw %}{{ tool }}{% raw %}" }} {{ source "{% endraw %}{{ environment }}{% raw %}" }}{% endraw %}
   {% endif %}
-  {% if {{ environment }} == "stg" %}
+  {% if environment == "stg" %}
     name: Compare {{ environment }}
     kind: shell
     sourceid: {{ environment }}
     spec:
       command: bash ./compare_version.sh {% raw %}{{ source "dev" }} {{ source "{% endraw %}{{ environment }}{% raw %}" }}{% endraw %}
   {% endif %}
-  {% if {{ environment }} == "prd" %}
+  {% if environment == "prd" %}
     name: Compare {{ environment }}
     kind: shell
     sourceid: {{ environment }}
     spec:
       command: bash ./compare_version.sh {% raw %}{{ source "stg" }} {{ source "{% endraw %}{{ environment }}{% raw %}" }}{% endraw %}v
   {% endif %}
-  {% if {{ environment }} == "mgmt" %}
+  {% if environment == "mgmt" %}
     name: Compare {{ environment }}
     kind: shell
     sourceid: {{ environment }}
@@ -58,7 +58,7 @@ conditions:
   {% endif %}
 
 targets:
-  {%if {{ environment }} == "dev" %}
+  {%if environment == "dev" %}
     DevChartVersion: 
       name: test
       scmid: default
@@ -68,7 +68,7 @@ targets:
         file: "charts/argocd/utils/{{ tool }}.yaml"
         key: "spec.generators[0].list.elements[1].targetRevision"
   {% endif %}
-  {%if {{ environment }} == "stg" %}
+  {%if environment == "stg" %}
     STGChartVersion: 
       name: test
       scmid: default
@@ -78,7 +78,7 @@ targets:
         file: "charts/argocd/utils/{{ tool }}.yaml"
         key: "spec.generators[0].list.elements[2].targetRevision"
   {% endif %}
-  {%if {{ environment }} == "prd" %}
+  {%if environment == "prd" %}
     STGChartVersion: 
       name: test
       scmid: default
@@ -88,7 +88,7 @@ targets:
         file: "charts/argocd/utils/{{ tool }}.yaml"
         key: "spec.generators[0].list.elements[3].targetRevision"
   {% endif %}
-  {%if {{ environment }} == "mgmt" %}
+  {%if environment == "mgmt" %}
     STGChartVersion: 
       name: test
       scmid: default
