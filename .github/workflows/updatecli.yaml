@@ -20,15 +20,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: pip install
-        run: pip install -r updatecli.d/requirements.txt
+      - name: pip3 install
+        run: pip3 install -r updatecli.d/requirements.txt
 
       - name: Generate workflows
         run: |
           ls -l 
           python3 --version
           mkdir /tmp/workflows
-          python updatecli.d/updatecli_workflow_generator.py
+          python3 updatecli.d/updatecli_workflow_generator.py
           ls -l /tmp
           ls -l /tmp/workflows
 
