@@ -1,15 +1,20 @@
 ---
-name: Updatecli
+name: test
 
 on:
-  schedule:
-      - cron: "* * * * *"
+  push:
+    branches:
+      - main
+  pull_request:
+    # Sequence of patterns matched against refs/heads
+    branches:
+      - main
 permissions:
   contents: write
   pull-requests: write
 
 jobs:
-  updatecli:
+  updates:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -20,9 +25,12 @@ jobs:
 
       - name: Generate workflows
         run: |
+          ls -l 
+          python3 --version
           mkdir /tmp/workflows
           python updatecli.d/updatecli_workflow_generator.py
           ls -l /tmp
+          ls -l /tmp/workflows
 
       - name: Install Updatecli in the runner
         uses: updatecli/updatecli-action@v2
