@@ -14,12 +14,12 @@ scms:
 
 sources:
   {{ tool }}:
-    name: Get latest {{ tool }} Helm chart version
-    kind: gittag
-    scmid: {{ tool }}
+    kind: helmchart
     spec:
-      versionfilter:
+      url: {{ url }}
         kind: latest
+        name: {{ chart_name }}
+        
   {{ environment }}:
     name: Get {{ environment }} version
     kind: yaml
