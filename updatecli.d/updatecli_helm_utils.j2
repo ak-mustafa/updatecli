@@ -1,5 +1,4 @@
-{% set environments_var = environments %}
-name: Update {{ tool }}-{{ env }} service Helm Chart versions
+name: Update {{ tool }}-{{ environment }} service Helm Chart versions
 
 scms:
   {{ tool }}:
@@ -26,17 +25,16 @@ sources:
     spec:
       versionfilter:
         kind: latest
-  {% for environment in environments %}{{ environment }}:
+  {{ environment }}:
     name: Get {{ environment }} version
     kind: yaml
     scmid: default
     spec:
       file: charts/argocd/utils/{{ tool }}.yaml
-      key: $.spec.generators[0].matrix.generators[1].list.elements[{{ loop.index0 }}].targetRevision
-  {% endfor %}
+      key: $.spec.generators[0].list.elements[{{ row }}].targetRevision
 
 conditions:
-  {% for environment in environments_var %}{{ environment }}:
+  {{ environment }}:
   {% if environment == "dev" %}
     name: Compare {{ environment }}
     kind: shell
@@ -65,7 +63,6 @@ conditions:
     spec:
       command: bash ./compare_version.sh {% raw %}{{ source "prd" }} {{ source "{% endraw %}{{ environment }}{% raw %}" }}{% endraw %}
   {% endif %}
-  {% endfor %}
 
 targets:
   {%if environment == "dev" %}
