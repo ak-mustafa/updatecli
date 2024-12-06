@@ -1,0 +1,110 @@
+{% set environment = environments %}
+name: Update AzureWorkloadIdentity-{{ environment }} service Helm Chart versions
+
+scms:
+  {{ tool }}:
+    kind: helmchart
+    spec:
+      url:  {{ url }}
+      name: {{ chart_name }} 
+  default:
+    kind: github
+    spec:
+      user: ak-mustafa
+      email: akmustafa.tech@gmail.com
+      owner: ak-mustafa
+      repository: update-cli
+      username: ak-mustafa
+      token: '{% raw %}{{ requiredEnv "GH_TOKEN" }}{% endraw %}'
+      branch: main
+
+sources:
+  {{ tool }}:
+    name: Get latest {{ tool }} Helm chart version
+    kind: gittag
+    scmid: {{ tool }}
+    spec:
+      versionfilter:
+        kind: latest
+  {% for environment in environments %}{{ environment }}:
+    name: Get {{ environment }} version
+    kind: yaml
+    scmid: default
+    spec:
+      file: charts/argocd/utils/{{ tool }}.yaml
+      key: $.spec.generators[0].matrix.generators[1].list.elements[{{ loop.index0 }}].targetRevision
+  {% endfor %}
+
+conditions:
+  {% for environment in environments %}{{ environment }}:
+  {% if environment == "dev" %}
+    name: Compare {{ environment }}
+    kind: shell
+    sourceid: {{ environment }}
+    spec:
+      command: bash ./compare_version.sh {% raw %}{{ source "{% endraw %}{{ tool }}{% raw %}" }} {{ source "{% endraw %}{{ environment }}{% raw %}" }}{% endraw %}
+  {% endif %}
+  {% if environment == "stg" %}
+    name: Compare {{ environment }}
+    kind: shell
+    sourceid: {{ environment }}
+    spec:
+      command: bash ./compare_version.sh {% raw %}{{ source "dev" }} {{ source "{% endraw %}{{ environment }}{% raw %}" }}{% endraw %}
+  {% endif %}
+  {% if environment == "prd" %}
+    name: Compare {{ environment }}
+    kind: shell
+    sourceid: {{ environment }}
+    spec:
+      command: bash ./compare_version.sh {% raw %}{{ source "stg" }} {{ source "{% endraw %}{{ environment }}{% raw %}" }}{% endraw %}v
+  {% endif %}
+  {% if environment == "mgmt" %}
+    name: Compare {{ environment }}
+    kind: shell
+    sourceid: {{ environment }}
+    spec:
+      command: bash ./compare_version.sh {% raw %}{{ source "prd" }} {{ source "{% endraw %}{{ environment }}{% raw %}" }}{% endraw %}
+  {% endif %}
+  {% endfor %}
+
+targets:
+  {%if environment == "dev" %}
+    DevChartVersion: 
+      name: test
+      scmid: default
+      sourceid: latestVersion
+      kind: yaml
+      spec:
+        file: "charts/argocd/utils/{{ tool }}.yaml"
+        key: "spec.generators[0].list.elements[1].targetRevision"
+  {% endif %}
+  {%if environment == "stg" %}
+    STGChartVersion: 
+      name: test
+      scmid: default
+      sourceid: latestVersion
+      kind: yaml
+      spec:
+        file: "charts/argocd/utils/{{ tool }}.yaml"
+        key: "spec.generators[0].list.elements[2].targetRevision"
+  {% endif %}
+  {%if environment == "prd" %}
+    STGChartVersion: 
+      name: test
+      scmid: default
+      sourceid: latestVersion
+      kind: yaml
+      spec:
+        file: "charts/argocd/utils/{{ tool }}.yaml"
+        key: "spec.generators[0].list.elements[3].targetRevision"
+  {% endif %}
+  {%if environment == "mgmt" %}
+    STGChartVersion: 
+      name: test
+      scmid: default
+      sourceid: latestVersion
+      kind: yaml
+      spec:
+        file: "charts/argocd/utils/{{ tool }}.yaml"
+        key: "spec.generators[0].list.elements[0].targetRevision"
+  {% endif %}

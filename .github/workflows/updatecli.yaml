@@ -1,0 +1,35 @@
+---
+name: Updatecli
+
+on:
+  schedule:
+    - cron: 0 0 * * *
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  updatecli:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: pip install
+        run: pip install -r updatecli.d/requirements.txt
+
+      - name: Generate workflows
+        run: |
+          mkdir /tmp/workflows
+          python updatecli.d/updatecli_workflow_generator.py
+          ls -l /tmp
+
+      - name: Install Updatecli in the runner
+        uses: updatecli/updatecli-action@v2
+
+      - name: Run Updatecli in apply mode
+        run: updatecli apply --config /tmp/workflows
+        env:
+          TOKEN: ${{ secrets.GH_TOKEN }}
+          USERNAME: ${{ secrets.GH_USERNAME }}
