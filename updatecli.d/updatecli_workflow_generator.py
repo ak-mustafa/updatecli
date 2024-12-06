@@ -29,7 +29,7 @@ for env in ENVIRONMENTS:
                     row = 0
                 elements = yaml_data['spec']['generators'][0]['list']['elements'][row]
 
-            with open('updatecli_helm_utils.j2', 'r') as template_file:
+            with open('./updatecli.d/updatecli_helm_utils.j2', 'r') as template_file:
                 template_str = template_file.read()
 
             template = Template(template_str)
