@@ -69,7 +69,7 @@ targets:
     DevChartVersion: 
       name: test
       scmid: default
-      sourceid: latestVersion
+      sourceid: {{ tool }}
       kind: yaml
       spec:
         file: "charts/argocd/utils/{{ tool }}.yaml"
@@ -79,7 +79,7 @@ targets:
     STGChartVersion: 
       name: test
       scmid: default
-      sourceid: latestVersion
+      sourceid: {{ tool }}
       kind: yaml
       spec:
         file: "charts/argocd/utils/{{ tool }}.yaml"
@@ -89,7 +89,7 @@ targets:
     STGChartVersion: 
       name: test
       scmid: default
-      sourceid: latestVersion
+      sourceid: {{ tool }}
       kind: yaml
       spec:
         file: "charts/argocd/utils/{{ tool }}.yaml"
@@ -99,7 +99,7 @@ targets:
     STGChartVersion: 
       name: test
       scmid: default
-      sourceid: latestVersion
+      sourceid: {{ tool }}
       kind: yaml
       spec:
         file: "charts/argocd/utils/{{ tool }}.yaml"
