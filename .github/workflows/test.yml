@@ -1,5 +1,5 @@
 ---
-name: Updatecli
+name: test
 
 on:
   pull_request:
@@ -11,7 +11,7 @@ permissions:
   pull-requests: write
 
 jobs:
-  updatecli:
+  updates:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
