@@ -53,9 +53,9 @@ sources:
 
 conditions:
   {% if environment == 'dev' %}
-    name: Compare {{ environment }}
-    kind: shell
-    sourceid: {{ environment }}
+    name: "Compare {{ environment }}"
+    kind: "shell"
+    sourceid: "{{ environment }}"
     spec:
       command: bash ./compare_version.sh {% raw %}{{ source "{% endraw %}{{ tool }}{% raw %}" }} {{ source "{% endraw %}{{ environment }}{% raw %}" }}{% endraw %}
   {% endif %}
