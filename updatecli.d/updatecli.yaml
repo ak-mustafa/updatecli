@@ -1,51 +1,35 @@
-#updatecli.yaml
+---
+name: Updatecli
 
-name: Bump Helm Chart versions
-scms:
+on:
+  schedule:
+    - cron: 0 0 * * *
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
   updatecli:
-    kind: "github"
-    spec:
-      user: '{{ .scm.user }}'
-      email: '{{ .scm.email }}'
-      owner: '{{ .scm.owner }}'
-      repository: '{{ .scm.repository }}'
-      token: '{{ requiredEnv "GH_TOKEN" }}'
-      username: '{{ .scm.username }}'
-      branch: '{{ .scm.branch }}'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
 
-# Define the source of the data
-sources:
-  latestVersion:
-    kind: helmchart
-    spec: 
-      url: https://azure.github.io/azure-workload-identity/charts
-      name: workload-identity-webhook
-  
-  DevChartVersion:
-    kind: yaml
-    spec:
-      file: "charts/argocd/utils/azure-workload-identity.yaml"
-      key: "spec.generators[0].list.elements[1].targetRevision"
+      - name: pip install
+        run: pip install -r updatecli.d/requirements.txt
 
+      - name: Generate workflows
+        run: |
+          mkdir /tmp/workflows
+          python updatecli.d/updatecli_workflow_generator.py
+          ls -l /tmp
 
-actions:
-  helm-charts:
-    kind: github/pullrequest
-    scmid: "updatecli"
-    spec:
-      automerge: false
-      description: "Prepend description"
-      draft: false
-      labels:
-        - "update"
-      title: "Pull Request Title"
+      - name: Install Updatecli in the runner
+        uses: updatecli/updatecli-action@v2
 
-targets: 
-  DevChartVersion: 
-    name: test
-    scmid: updatecli
-    sourceid: latestVersion
-    kind: yaml
-    spec:
-      file: "charts/argocd/utils/azure-workload-identity.yaml"
-      key: "spec.generators[0].list.elements[1].targetRevision"
+      - name: Run Updatecli in apply mode
+        run: updatecli apply --config /tmp/workflows
+        env:
+          TOKEN: ${{ secrets.GH_TOKEN }}
+          USERNAME: ${{ secrets.GH_USERNAME }}
