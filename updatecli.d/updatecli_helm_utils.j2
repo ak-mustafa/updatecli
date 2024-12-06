@@ -28,7 +28,6 @@ sources:
       key: $.spec.generators[0].list.elements[{{ row }}].targetRevision
 
 conditions:
-  {{ environment }}:
   {% if environment == "dev" %}
     name: Compare {{ environment }}
     kind: shell
