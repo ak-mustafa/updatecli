@@ -14,7 +14,7 @@ spec:
         targetRevision: 1.2.2
       - cluster: aks-neu-dev
         url: dev
-        targetRevision: 1.2.0
+        targetRevision: 1.4.0
       - cluster: aks-neu-stg
         url: stg
         targetRevision: 1.2.2
